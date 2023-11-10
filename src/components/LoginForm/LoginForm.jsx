@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { logIn } from 'redux/authOperations';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 export const LoginForm = () => {
   const dispatch = useDispatch();
@@ -61,18 +62,7 @@ export const LoginForm = () => {
           Log In
         </button>
       </form>
+      <Link to="/register">{"Don't have an account? Sign Up"}</Link>
     </div>
-
-    /* <form onSubmit={handleSubmit} autoComplete="off">
-      <label>
-        Email
-        <input type="email" name="email" />
-      </label>
-      <label>
-        Password
-        <input type="password" name="password" />
-      </label>
-      <button type="submit">Log In</button>
-    </form> */
   );
 };

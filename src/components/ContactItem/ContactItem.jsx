@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-//import { Button, Item } from './ContactItem.styled';
 import { useDispatch } from 'react-redux';
 import {
   deleteContact,
@@ -7,9 +6,11 @@ import {
   patchContact,
 } from 'redux/contactsOperations';
 import EditContactForm from 'components/EditContactForm/EditContactForm';
-import { Button } from '@mui/material';
+import { Box, CardContent, IconButton, Typography } from '@mui/material';
 import { Avatar, Grid, Card, CardActions, CardHeader } from '@mui/material';
-import { indigo } from '@mui/material/colors';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import DeleteIcon from '@mui/icons-material/Delete';
+import toast from 'react-hot-toast';
 
 const ContactItem = ({ contact }) => {
   const [edit, setEdit] = useState(false);
@@ -18,9 +19,16 @@ const ContactItem = ({ contact }) => {
   const handleDelete = async contactId => {
     try {
       await dispatch(deleteContact(contactId)).unwrap();
-      dispatch(fetchContacts());
+      await dispatch(fetchContacts()).unwrap();
+      toast.success('Contact was deleted!', {
+        duration: 3000,
+        position: 'top-right',
+      });
     } catch (error) {
-      console.log(error);
+      toast.error('Something was wrong. Please try again!', {
+        duration: 3000,
+        position: 'top-right',
+      });
     }
   };
 
@@ -34,9 +42,16 @@ const ContactItem = ({ contact }) => {
         patchContact({ contactId: contact.id, name, number })
       ).unwrap();
       dispatch(fetchContacts());
+      toast.success('Contact was edited!', {
+        duration: 3000,
+        position: 'top-right',
+      });
       setEdit(false);
     } catch (error) {
-      console.log(error);
+      toast.error('Something was wrong. Please try again!', {
+        duration: 3000,
+        position: 'top-right',
+      });
     }
   };
 
@@ -47,60 +62,71 @@ const ContactItem = ({ contact }) => {
   return (
     <>
       <Grid item key={contact.id}>
-        <Card sx={{ maxWidth: 500 }}>
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: indigo[500] }} aria-label="contact">
-                {contact.name?.at(0)?.toUpperCase()}
-              </Avatar>
-            }
-            title={contact.name}
-            subheader={contact.number}
-          />
-          <CardActions>
-            <Button
-              size="small"
-              variant="outlined"
-              type="button"
-              sx={{ mr: 5 }}
-              //variant="contained"
-              color="primary"
-              onClick={() => editClick()}
-            >
-              Edit
-            </Button>
-            <Button
-              size="small"
-              type="button"
-              variant="contained"
-              color="info"
-              onClick={() => handleDelete(contact.id)}
-            >
-              Delete
-            </Button>
-          </CardActions>
+        <Card sx={{ boxShadow: '0 0 10px 1px grey', borderRadius: '5px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              maxWidth: '400px',
+              gap: '10px',
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: 'primary.main' }} aria-label="contact">
+                  {contact.name?.at(0)?.toUpperCase()}
+                </Avatar>
+              }
+            />
+            {!edit ? (
+              <>
+                <CardContent>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontSize: 16 }}
+                    color="text.secondary"
+                  >
+                    {contact.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontSize: 16 }}
+                    color="text.secondary"
+                  >
+                    {contact.number}
+                  </Typography>
+                </CardContent>
+                <CardActions disableSpacing>
+                  <IconButton
+                    edge="end"
+                    color="primary"
+                    sx={{ mr: 1 }}
+                    aria-label="editContact"
+                    onClick={() => editClick()}
+                  >
+                    <BorderColorIcon />
+                  </IconButton>
+
+                  <IconButton
+                    edge="end"
+                    color="primary"
+                    aria-label="deleteContact"
+                    onClick={() => handleDelete(contact.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </CardActions>
+              </>
+            ) : (
+              <EditContactForm
+                handleEdit={handleEdit}
+                oldName={contact.name}
+                oldNumber={contact.number}
+                cancelEdit={cancelEdit}
+              />
+            )}
+          </Box>
         </Card>
       </Grid>
-
-      {/* <Item>
-        <p>
-          {contact.name} : {contact.number}
-        </p>
-        <Button type="button" onClick={() => editClick()}>
-          Edit
-        </Button>
-        <Button type="button" onClick={() => handleDelete(contact.id)}>
-          Delete
-        </Button>
-      </Item> */}
-      {edit && (
-        <EditContactForm
-          handleEdit={handleEdit}
-          oldName={contact.name}
-          oldNumber={contact.number}
-          cancelEdit={cancelEdit}
-        />
-      )}
     </>
   );
 };

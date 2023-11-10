@@ -1,23 +1,15 @@
 import { useState } from 'react';
-//import { Form, Button, Label, Input } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, fetchContacts } from 'redux/contactsOperations';
 import { selectContacts } from 'redux/selectors';
-import Notiflix from 'notiflix';
+import { Box, Button, TextField } from '@mui/material';
+import toast from 'react-hot-toast';
 
 export const ContactForm = ({ createContact }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const contactList = useSelector(selectContacts);
-
-  const handleChange = ({ target: { value, name } }) => {
-    if (name === 'name') {
-      setName(value);
-    } else {
-      setNumber(value);
-    }
-  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -26,57 +18,70 @@ export const ContactForm = ({ createContact }) => {
       el => el.name.toLowerCase() === name.toLowerCase()
     );
     if (isAlreadyExist) {
-      Notiflix.Notify.warning(`${name} is already in contacts.`);
+      toast.error(`${name} is already in contacts!`, {
+        duration: 3000,
+        position: 'top-right',
+      });
       return;
     }
 
     try {
       await dispatch(addContact({ name, number })).unwrap();
-      dispatch(fetchContacts());
+      toast.success('Contact was added!', {
+        duration: 3000,
+        position: 'top-right',
+      });
+      await dispatch(fetchContacts()).unwrap();
       setName('');
       setNumber('');
       form.reset();
     } catch (error) {
-      console.log(error);
+      toast.error('Something was wrong. Please try again!', {
+        duration: 3000,
+        position: 'top-right',
+      });
     }
   };
+
   return (
-    <div className="card p-5 mx-auto mt-5" style={{ width: 400 }}>
-      <form className="mb-3" onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="exampleInputName" className="form-label">
-            Name
-          </label>
-          <input
-            name="name"
-            type="text"
-            onChange={handleChange}
-            className={`form-control && 'is-invalid'}`}
-            id="exampleInputName"
-            value={name}
-            required
-          />
-          <div className="invalid-feedback">Please input contact name</div>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputContactNumber" className="form-label">
-            Number
-          </label>
-          <input
-            name="number"
-            type="tel"
-            onChange={handleChange}
-            className={`form-control  && 'is-invalid'}`}
-            id="exampleInputContactNumber"
-            value={number}
-            required
-          />
-          <div className="invalid-feedback">Please input contact number</div>
-        </div>
-        <button type="submit" className="btn btn-info">
-          Add contact
-        </button>
-      </form>
-    </div>
+    <Box
+      component="form"
+      sx={{
+        p: 3,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        maxWidth: '400px',
+        boxShadow: '0 0 10px 1px grey',
+        borderRadius: '5px',
+        mb: 2,
+        mt: 2,
+      }}
+      onSubmit={handleSubmit}
+      noValidate
+      autoComplete="off"
+    >
+      <TextField
+        required
+        id="standard-text"
+        label="Name"
+        type="text"
+        value={name}
+        variant="standard"
+        onChange={e => setName(e.target.value)}
+      />
+      <TextField
+        required
+        id="standard-number"
+        label="Number"
+        type="tel"
+        value={number}
+        variant="standard"
+        onChange={e => setNumber(e.target.value)}
+      />
+      <Button variant="contained" type="submit">
+        Add contact
+      </Button>
+    </Box>
   );
 };

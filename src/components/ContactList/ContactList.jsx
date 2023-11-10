@@ -7,10 +7,10 @@ import { Grid } from '@mui/material';
 
 const ContactList = () => {
   const visibleContacts = useSelector(selectVisibleContacts);
-  ///div className="container"
+
   return (
     <>
-      <Grid container direction="row" spacing={4} justifyContent="center">
+      <Grid container direction="column" spacing={2} justifyContent="center">
         {visibleContacts.map(contact => (
           <ContactItem key={contact.id} contact={contact} />
         ))}
