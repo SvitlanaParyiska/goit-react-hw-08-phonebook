@@ -20,13 +20,13 @@ export default function Contacts() {
 
   return (
     <Container>
-      <h1>Phonebook</h1>
+      <h1>PhoneBook</h1>
       <ContactForm />
       <h2>Contacts</h2>
       {contacts.length > 0 ? (
         <Filter />
       ) : (
-        <Notification text={'Your phonebook is empty. Add first contact!'} />
+        <Notification text={'Your PhoneBook is empty. Add first contact!'} />
       )}
       {isLoading && !error && <b>Request in progress...</b>}
       <ContactList />

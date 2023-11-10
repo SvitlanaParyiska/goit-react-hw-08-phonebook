@@ -11,7 +11,7 @@ export const Navigation = () => {
       </NavLink>
       {isLoggedIn && (
         <NavLink className="navbar-brand mb-0 h1 text-info" to="/contacts">
-          Phonebook
+          PhoneBook
         </NavLink>
       )}
     </nav>
