@@ -68,6 +68,7 @@ const ContactItem = ({ contact }) => {
               display: 'flex',
               maxWidth: '400px',
               gap: '10px',
+              justifyContent: 'space-between',
             }}
           >
             <CardHeader
@@ -80,11 +81,7 @@ const ContactItem = ({ contact }) => {
             {!edit ? (
               <>
                 <CardContent>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: 16 }}
-                    color="text.secondary"
-                  >
+                  <Typography variant="h5" color="text.secondary">
                     {contact.name}
                   </Typography>
                   <Typography
@@ -110,6 +107,7 @@ const ContactItem = ({ contact }) => {
                     edge="end"
                     color="primary"
                     aria-label="deleteContact"
+                    sx={{ mr: 0.5 }}
                     onClick={() => handleDelete(contact.id)}
                   >
                     <DeleteIcon />
