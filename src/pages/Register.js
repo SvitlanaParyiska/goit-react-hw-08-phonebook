@@ -11,7 +11,11 @@ const Register = () => {
   //  registration = { registration };
   // };
 
-  return <RegisterForm />;
+  return (
+    <div className="p-2">
+      <RegisterForm />
+    </div>
+  );
 };
 
 export default Register;

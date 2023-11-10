@@ -30,7 +30,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="card p-5 mx-auto mt-5" style={{ width: 500 }}>
+    <div className="card p-5 mx-auto mt-3" style={{ maxWidth: 400 }}>
       <form onSubmit={handleSubmit} autoComplete="off">
         <div className="mb-3">
           <label htmlFor="exampleInputName" className="form-label">
